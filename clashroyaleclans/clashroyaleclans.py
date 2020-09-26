@@ -334,7 +334,7 @@ class ClashRoyaleClans(commands.Cog):
         self.last_updated = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
 
     @commands.command(name="clanaudit")
-    async def clanaudit(self, ctx, nickname: str):
+    async def clanaudit(self, ctx, nickname: str, mentions: int = 0):
         async with ctx.channel.typing():
             clan_info = self.get_clan_by_nickname(nickname)
             if clan_info is None:
@@ -359,7 +359,10 @@ class ClashRoyaleClans(commands.Cog):
             for member in role.members:
                 member_tags = self.tags.quickGetAllTags(member.id)
                 if len(member_tags) == 0:
-                    unknown_members.add(member.mention)
+                    if mentions == 1:
+                        unknown_members.append(member.mention)
+                    else:
+                        unknown_members.append(member.display_name)
 
                 print(f"{member.display_name} found tags: {member_tags}")
                 found = False
@@ -368,7 +371,10 @@ class ClashRoyaleClans(commands.Cog):
                         found = True
                         break
                 if not found:
-                    orphan_members.append(member.mention)
+                    if mentions == 1:
+                        orphan_members.append(member.mention)
+                    else:
+                        orphan_members.append(member.display_name)
                     print(f"{member} was not found in the clan: {clan_info['name']}.")
 
             for tag,name in clan_member_by_name_by_tags.items():
