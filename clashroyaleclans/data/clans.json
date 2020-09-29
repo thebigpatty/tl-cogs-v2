@@ -94,6 +94,7 @@
 		},
 		"waiting": []
 	},
+	"_comment": "comment text goes here...",
 	"TL Plasma": {
 		"name": "TL Plasma",
 		"tag": "PGQY9Q9C",
@@ -132,6 +133,7 @@
 		},
 		"waiting": []
 	},
+	"_comment": "comment text goes here...",
 	"TL Movement": {
 		"name": "TL Movement",
 		"tag": "YJV8RG22",
