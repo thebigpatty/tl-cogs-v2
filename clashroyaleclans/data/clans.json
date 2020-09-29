@@ -133,6 +133,44 @@
 		},
 		"waiting": []
 	},
+	"TL Movement": {
+		"name": "TL Movement",
+		"tag": "YJV8RG22",
+		"nickname": "Movement",
+		"clanrole": "Movement",
+		"requirements": {
+			"personalbest": 5000,
+			"wdwins": 0,
+			"cwr": {
+				"legendary": 0,
+				"gold": 0,
+				"silver": 0,
+				"bronze": 0
+			},
+			"bonus": "",
+			"private": false
+		},
+		"waiting": []
+	},
+	"TL Blaze": {
+		"name": "TL Blaze",
+		"tag": "Y9G2LQ2Y",
+		"nickname": "Blaze",
+		"clanrole": "Blaze",
+		"requirements": {
+			"personalbest": 5600,
+			"wdwins": 0,
+			"cwr": {
+				"legendary": 10,
+				"gold": 50,
+				"silver": 0,
+				"bronze": 0
+			},
+			"bonus": "",
+			"private": false
+		},
+		"waiting": []
+	},
 	"TL Tombstone": {
 		"name": "TL Tombstone",
 		"tag": "YJ8GRVGY",
