@@ -378,7 +378,7 @@ class ClashRoyaleClans(commands.Cog):
                     absent_names.append(f"{name}")
 
             if len(unknown_members) == 0:
-                unknown_members_str = 'None'
+                unknown_members_str = ':white_check_mark:'
                 unknown_count = 0
             else:
                 unknown_members.sort(key=str.lower)
@@ -386,7 +386,7 @@ class ClashRoyaleClans(commands.Cog):
                 unknown_count = len(unknown_members)
 
             if len(orphan_members) == 0:
-                orphan_members_str = 'None'
+                orphan_members_str = ':white_check_mark:'
                 orphan_count = 0
             else:
                 orphan_members.sort(key=str.lower)
@@ -394,7 +394,7 @@ class ClashRoyaleClans(commands.Cog):
                 orphan_count = len(orphan_members)
 
             if len(absent_names) == 0:
-                absent_names_str = 'None'
+                absent_names_str = ':white_check_mark:'
                 absent_count = 0
             else:
                 absent_names.sort(key=str.lower)
@@ -402,7 +402,8 @@ class ClashRoyaleClans(commands.Cog):
                 absent_names_str = absent_names_str[:1024] # max length allowed for discord
                 absent_count = len(absent_names)
 
-            embed=discord.Embed(title=f"Clan Audit: {clan_info['name']}", color=0x00ff00)
+            embed=discord.Embed(title=f"Clan Audit: {clan_info['name']}", color=discord.Colour.blue())
+            embed.add_field(name=f"({len(role.members)}) Players with **{clan_role}** role", value=":heart:", inline=False)
             embed.add_field(name=f"({unknown_count}) Players with **{clan_role}** role, but have **NO** tags saved", value=unknown_members_str, inline=False)
             embed.add_field(name=f"({orphan_count}) Players with **{clan_role}** role, but have **NOT** joined the clan", value=orphan_members_str, inline=False)
             embed.add_field(name=f"({absent_count}) Players in **{clan_info['name']}**, but have **NOT** joined discord", value=absent_names_str, inline=False)
