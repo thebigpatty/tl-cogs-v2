@@ -347,6 +347,10 @@ class ClashRoyaleClans(commands.Cog):
 
             # List of all clan member tags from ClashRoyalAPI
             clan_member_by_name_by_tags = await self.get_clan_members(clan_tag)
+            if clan_member_by_name_by_tags is None:
+                return await ctx.send(
+                    "Clan data not found. Use `{}refresh` to get clan data.".format(ctx.prefix)
+                )
 
             # Obtain all members with the clanrole
             role = discord.utils.get(ctx.guild.roles, name=clan_role)
@@ -424,6 +428,9 @@ class ClashRoyaleClans(commands.Cog):
         members_names_by_tag = {}
 
         clan_data = await self.get_clandata_by_tag(clan_tag)
+        if clan_data is None:
+            # We don't have the data yet.
+            return None
         for member in clan_data["member_list"]:
             members_names_by_tag[member["tag"].strip('#')] = member["name"]
         return members_names_by_tag
