@@ -408,11 +408,11 @@ class ClashRoyaleClans(commands.Cog):
             embed.add_field(name=f"({orphan_count}) Players with **{clan_role}** role, but have **NOT** joined the clan", value=orphan_members_str, inline=False)
             embed.add_field(name=f"({absent_count}) Players in **{clan_info['name']}**, but have **NOT** joined discord", value=absent_names_str, inline=False)
 
-            await ctx.channel.send(
-                embed=embed,
-                allowed_mentions=discord.AllowedMentions(
-                    users=True, roles=True
-                ))
+        await ctx.channel.send(
+            embed=embed,
+            allowed_mentions=discord.AllowedMentions(
+                users=True, roles=True
+            ))
 
     def get_clan_by_nickname(self, nickname: str):
         for name, data in self.family_clans.items():
