@@ -358,8 +358,12 @@ class ClashRoyaleClans(commands.Cog):
             unknown_members = [] # People w/ role and no tags
             orphan_members = [] # People w/ role and have a tag and can't be found in the ClashRoyalAPI
             absent_names = [] # Tags (URLS?) of people who aren't in Discord
+
+            # get the list of member id's
+            tags_by_member_id = self.tags.getTagsForUsers([member.id for member in role.members])
+
             for member in role.members:
-                member_tags = self.tags.quickGetAllTags(member.id)
+                member_tags = tags_by_member_id.get(member.id, [])
                 if len(member_tags) == 0:
                     if mentions == 1:
                         unknown_members.append(member.mention)
