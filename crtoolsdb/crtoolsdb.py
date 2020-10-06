@@ -20,6 +20,12 @@ class TagAlreadySaved(Exception):
     pass
 
 
+class TagAlreadyExists(Exception):
+    def __init__(self, user_id, message):
+        self.user_id = user_id
+        self.message = message
+
+
 class MainAlreadySaved(Exception):
     pass
 
@@ -243,6 +249,12 @@ KEY `idx_tag` (`tag`)
         tag = self.formatTag(tag=tag)
         if not self.verifyTag(tag):
             raise InvalidTag
+
+        existing_user_row = self.getUser(tag)
+        if len(existing_user_row) > 0:
+            raise TagAlreadyExists(existing_user_row[0][0], f"Tag is saved under another user: {existing_user_row[0][0]}")
+
+
         # if not main and count == 0:
         #     raise NoMainSaved
         # if main and count != 0:
@@ -419,6 +431,16 @@ class ClashRoyaleTools(commands.Cog):
             return
         except TagAlreadySaved:
             await ctx.send("That tag has already been saved under this account")
+            return
+        except TagAlreadyExists as e:
+            user = self.bot.get_user(e.user_id)
+            embed=discord.Embed(title="Error", description=f"Tag is saved under another user: {user.mention}", color=0xff0000)
+            await ctx.send(
+                embed=embed,
+                allowed_mentions=discord.AllowedMentions(
+                    users=True, roles=False
+                )
+            )
             return
         except Exception as e:
             await ctx.send("Unknown Error Occurred. Please report this bug with : ```{}```".format(str(e)))
