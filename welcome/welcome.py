@@ -9,12 +9,6 @@ import discord
 from redbot.core import commands, checks, Config
 from redbot.core.data_manager import bundled_data_path, cog_data_path
 
-# Replace this with test server id while debugging
-legend_guild_id = 580455191376166943
-global_chat_id = 748995277037240330
-gate_id = 754879780889034933
-
-
 credits = "Bot by Legend Gaming"
 creditIcon = "https://i.imgur.com/dtSMITE.jpg"
 
@@ -636,7 +630,7 @@ class Welcome(commands.Cog):
 
     async def guest(self, member: discord.Member):
         """Add guest role and change nickname to CR"""
-        guild = self.bot.get_guild(legend_guild_id)
+        guild = self.bot.get_guild(self.config.server_id())
         member = guild.get_member(member.id)
         if not member:
             return self.errorer(member)
@@ -666,7 +660,7 @@ class Welcome(commands.Cog):
         self.user_history[member.id]["history"].append(menu_name)
 
     async def verify_membership(self, member:discord.Member):
-        guild = self.bot.get_guild(legend_guild_id)
+        guild = self.bot.get_guild(self.config.server_id())
         membership = False
         clans_joined = []
         role_names = []
@@ -712,7 +706,7 @@ class Welcome(commands.Cog):
         self.user_history[member.id]["history"].append(menu_name)
 
         welcomeMsg = rand_choice(self.welcome["GREETING"])
-        channel = self.bot.get_channel(global_chat_id)
+        channel = self.bot.get_channel(self.config.global_channel_id())
         await channel.send(welcomeMsg.format(member))
 
     async def clans_options(self, user):
@@ -813,9 +807,8 @@ class Welcome(commands.Cog):
     async def on_member_join(self, member:discord.Member):
         guild = member.guild
         # Allow command to be run in legend server. Use list so test servers can be added
-        if guild.id != legend_guild_id:
+        if guild.id != self.config.server_id():
             return
-
         self.joined.append(member.id)
 
         await self.load_menu(member, "main")
@@ -836,7 +829,7 @@ class Welcome(commands.Cog):
     @commands.Cog.listener()
     async def on_member_remove(self, member:discord.Member):
         guild = member.guild
-        if guild.id != legend_guild_id:
+        if guild.id != self.config.server_id():
             return
 
         embed = discord.Embed(color=discord.Color.red(), description="User Left")
@@ -859,13 +852,57 @@ class Welcome(commands.Cog):
 
             await self.ReactionAddedHandler(reaction, user, history["history"], history["data"])
 
-    @commands.command()
+
+    @commands.group(name='welcome')
+    async def _welcome(self, ctx):
+        """Welcome Command Group"""
+
+    @_welcome.command()
     @commands.guild_only()
     @checks.admin_or_permissions(manage_guild=True)
-    async def welcome_menu(self, ctx, user:discord.Member = None):
+    async def menu(self, ctx, user:discord.Member = None):
+        """Send the welcome message to yourself or optionally
+        another user
+
+        For example: `[p]weclome menu [user]
+        """
         if user is None:
             user = ctx.message.author
         await self.on_member_join(user)
+
+    @_welcome.command(name="server")
+    @commands.guild_only()
+    @checks.admin_or_permissions(manage_guild=True)
+    async def server(self, ctx, server_id = None):
+        """Set the discord server id this is enabled for.
+
+        For example: `[p]weclome server {serverid}
+        """
+        if server_id is None:
+            await ctx.send(f"Server ID set to {await self.config.server_id()}")
+            return
+        await self.config.server_id.set(server_id)
+        await ctx.send("Server ID set.")
+
+    @_welcome.command(name="log")
+    @commands.guild_only()
+    @checks.admin_or_permissions(manage_guild=True)
+    async def logchannel(self, ctx, channel:discord.TextChannel = None):
+        if channel is None:
+            await ctx.send(f"Log channel is current set to {await self.config.log_channel_id()}")
+            return
+        await self.config.log_channel_id.set(channel.id)
+        await ctx.send("Log channel set."
+
+    @_welcome.command(name="global")
+    @commands.guild_only()
+    @checks.admin_or_permissions(manage_guild=True)
+    async def globalchannel(self, ctx, channel:discord.TextChannel):
+        if channel is None:
+            await ctx.send(f"Global channel is currently set to {await self.config.global_channel_id()}")
+            return
+        await self.config.global_channel_id.set(channel.id)
+        await ctx.send("Global channel set.")
 
     @commands.command()
     async def savetag(self, ctx, profiletag: str):
