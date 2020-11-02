@@ -42,13 +42,13 @@ class Symbol:
 dm_menu = {
     "main": {
         "embed": embed(title="Welcome", color=discord.Color.orange(),
-                       description="Welcome to the **Legend Clash Royale** Server, {0.mention}! "
+                       description="Welcome to the **Threat Level Gaming** Server, {0.mention}! "
                                    "We are one of the oldest and biggest families in "
                                    "Clash Royale with our 700 members and 15 clans! "
                                    "<a:goblinstab:468708996153475072>\n\n"
                                    "We are glad you joined us, can we ask a few questions "
                                    "to customize your experience?"),
-        "thumbnail": "https://i.imgur.com/8SRsdQz.png",
+        "thumbnail": "https://cdn.discordapp.com/attachments/718649031009501285/772704601384157184/image0.png",
         "options": [
             {
                 "name": "Yes please!",
@@ -73,7 +73,7 @@ dm_menu = {
                                    "But where exactly did you find us?"),
         "options": [
             {
-                "name": "Legend Website",
+                "name": "Threat Level Website",
                 "emoji": Letter.a,
                 "execute": {
                     "menu": "location_menu"
