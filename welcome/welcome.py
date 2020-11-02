@@ -10,9 +10,9 @@ from redbot.core import commands, checks, Config
 from redbot.core.data_manager import bundled_data_path, cog_data_path
 
 # Replace this with test server id while debugging
-legend_guild_id = 374596069989810176
-global_chat_id = 374596069989810178
-gate_id = 374597911436328971
+legend_guild_id = 580455191376166943
+global_chat_id = 748995277037240330
+gate_id = 754879780889034933
 
 
 credits = "Bot by Legend Gaming"
@@ -550,8 +550,6 @@ class Welcome(commands.Cog):
         return new_message.id
 
     async def ReactionAddedHandler(self, reaction: discord.Reaction, user: discord.Member, history, data):
-        guild = self.bot.get_guild(legend_guild_id)
-        user = guild.get_member(user.id)
         menu = dm_menu.get(history[-1])
         if(Symbol.arrow_backward == reaction.emoji):       # if back button then just load previous
             history.pop()
