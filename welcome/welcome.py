@@ -100,7 +100,7 @@ class Welcome(commands.Cog):
                     current_reaction = reaction
                     if reaction not in reaction_added:
                         await new_message.add_reaction(reaction)
-                        reaction_added.append(reaction_added)
+                        reaction_added.append(reaction)
                 if len(reaction_added) == len(reactions):
                     break
             except discord.Forbidden:
@@ -112,7 +112,7 @@ class Welcome(commands.Cog):
         return new_message.id
 
     async def ReactionAddedHandler(self, reaction: discord.Reaction, user: discord.Member, history, data):
-        menu = dm_menu.get(history[-1])
+        menu = self.menu.get(history[-1])
         if(Symbol.arrow_backward == reaction.emoji):       # if back button then just load previous
             history.pop()
             await self.load_menu(user, history[-1])
@@ -132,7 +132,7 @@ class Welcome(commands.Cog):
                 return
 
     async def load_menu(self, user: discord.Member, menu: str):
-        menu = dm_menu.get(menu)
+        menu = self.menu.get(menu)
         message = ""
         reactions = []
 
@@ -198,7 +198,7 @@ class Welcome(commands.Cog):
 
     async def guest(self, member: discord.Member):
         """Add guest role and change nickname to CR"""
-        guild = self.bot.get_guild(self.config.server_id())
+        guild = self.bot.get_guild(await self.config.server_id())
         member = guild.get_member(member.id)
         if not member:
             return self.errorer(member)
@@ -228,7 +228,7 @@ class Welcome(commands.Cog):
         self.user_history[member.id]["history"].append(menu_name)
 
     async def verify_membership(self, member:discord.Member):
-        guild = self.bot.get_guild(self.config.server_id())
+        guild = self.bot.get_guild(await self.config.server_id())
         membership = False
         clans_joined = []
         role_names = []
@@ -274,7 +274,7 @@ class Welcome(commands.Cog):
         self.user_history[member.id]["history"].append(menu_name)
 
         welcomeMsg = rand_choice(self.welcome["GREETING"])
-        channel = self.bot.get_channel(self.config.global_channel_id())
+        channel = self.bot.get_channel(await self.config.global_channel_id())
         await channel.send(welcomeMsg.format(member))
 
     async def clans_options(self, user):
@@ -323,7 +323,7 @@ class Welcome(commands.Cog):
 
     async def logger(self, user):
         """Log into a channel"""
-        channel = self.bot.get_channel(gate_id)
+        channel = self.bot.get_channel(await self.config.log_channel_id())
 
         embed = discord.Embed(color=discord.Color.green(), description="User Joined")
         avatar = user.avatar_url if user.avatar else user.default_avatar_url
@@ -375,7 +375,7 @@ class Welcome(commands.Cog):
     async def on_member_join(self, member:discord.Member):
         guild = member.guild
         # Allow command to be run in legend server. Use list so test servers can be added
-        if guild.id != self.config.server_id():
+        if guild.id != await self.config.server_id():
             return
         self.joined.append(member.id)
 
@@ -397,13 +397,13 @@ class Welcome(commands.Cog):
     @commands.Cog.listener()
     async def on_member_remove(self, member:discord.Member):
         guild = member.guild
-        if guild.id != self.config.server_id():
+        if guild.id != await self.config.server_id():
             return
 
         embed = discord.Embed(color=discord.Color.red(), description="User Left")
         avatar = member.avatar_url if member.avatar else member.default_avatar_url
         embed.set_author(name=member.display_name, icon_url=avatar)
-        channel = self.bot.get_channel(gate_id)
+        channel = self.bot.get_channel(await self.config.log_channel_id())
         await channel.send(embed=embed)
 
     @commands.Cog.listener()
@@ -430,7 +430,7 @@ class Welcome(commands.Cog):
     @checks.admin_or_permissions(manage_guild=True)
     async def menu(self, ctx, user:discord.Member = None):
         """Send the welcome message to yourself or optionally
-        another user
+        another user.
 
         For example: `[p]weclome menu [user]
         """
@@ -449,23 +449,31 @@ class Welcome(commands.Cog):
         if server_id is None:
             await ctx.send(f"Server ID set to {await self.config.server_id()}")
             return
-        await self.config.server_id.set(server_id)
+        await self.config.server_id.set(int(server_id))
         await ctx.send("Server ID set.")
 
     @_welcome.command(name="log")
     @commands.guild_only()
     @checks.admin_or_permissions(manage_guild=True)
     async def logchannel(self, ctx, channel:discord.TextChannel = None):
+        """Set or print the log channel id.
+
+        For example: `[p]weclome server {channelid}
+        """
         if channel is None:
             await ctx.send(f"Log channel is current set to {await self.config.log_channel_id()}")
             return
         await self.config.log_channel_id.set(channel.id)
-        await ctx.send("Log channel set."
+        await ctx.send("Log channel set.")
 
     @_welcome.command(name="global")
     @commands.guild_only()
     @checks.admin_or_permissions(manage_guild=True)
     async def globalchannel(self, ctx, channel:discord.TextChannel):
+        """Set or print the global channel id.
+
+        For example: `[p]weclome server {channelid}
+        """
         if channel is None:
             await ctx.send(f"Global channel is currently set to {await self.config.global_channel_id()}")
             return
@@ -476,6 +484,9 @@ class Welcome(commands.Cog):
     @commands.guild_only()
     @checks.admin_or_permissions(manage_guild=True)
     async def module(self, ctx, module:str = None):
+        """ load a welcome module Example:
+            [p]welcome module legendmenu
+        """
         if module is None:
             await ctx.send(f"Module is currently set to {await self.config.module()}")
             return

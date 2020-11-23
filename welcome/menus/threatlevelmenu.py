@@ -281,7 +281,7 @@ class ThreatLevelMenu():
                 "name": "I want to join a clan.",
                 "emoji": Letter.b,
                 "execute": {
-                    "menu": "academy_coaching"
+                    "menu": "join_clan"
                 }
             },
             {
@@ -293,36 +293,6 @@ class ThreatLevelMenu():
             }
         ],
         "go_back": False,
-        "track": True
-    },
-    "academy_coaching": {
-        "embed": welcome.embed(title="Are you interested in coaching?", color=discord.Color.orange(),
-                       description="We provide all of our members "
-                                   "free seminars with our coaching institute."),
-        "options": [
-            {
-                "name": "I am interested in coaching.",
-                "emoji": Letter.a,
-                "execute": {
-                    "menu": "join_clan"
-                }
-            },
-            {
-                "name": "I want to coach people.",
-                "emoji": Letter.b,
-                "execute": {
-                    "menu": "join_clan"
-                }
-            },
-            {
-                "name": "Not interested.",
-                "emoji": Letter.c,
-                "execute": {
-                    "menu": "join_clan"
-                }
-            }
-        ],
-        "go_back": True,
         "track": True
     },
     "join_clan": {
