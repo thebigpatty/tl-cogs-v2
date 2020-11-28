@@ -211,12 +211,6 @@ class Welcome(commands.Cog):
         except clashroyale.RequestError:
             return await self.errorer(member)
 
-        try:
-            newname = ign + " | Visitor"
-            await member.edit(nick=newname)
-        except (discord.Forbidden, discord.HTTPException):
-            pass
-
         role = discord.utils.get(member.guild.roles, name="Community")
         try:
             await member.add_roles(role)
