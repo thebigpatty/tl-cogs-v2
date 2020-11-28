@@ -12,8 +12,8 @@ from redbot.core.data_manager import bundled_data_path, cog_data_path
 
 from .menus.helper import Letter, Symbol
 
-credits = "Bot by Legend Gaming"
-creditIcon = "https://i.imgur.com/dtSMITE.jpg"
+credits = "Bot by Threat Level Gaming"
+creditIcon = "https://cdn.discordapp.com/attachments/718649031009501285/772704601384157184/image0.png"
 
 log = logging.getLogger("red.cogs.welcome")
 
@@ -43,8 +43,8 @@ class Welcome(commands.Cog):
         self.menu = {}
 
     def embed(self, **kwargs):
-        credits = "Bot by Legend Gaming"
-        creditIcon = "https://i.imgur.com/dtSMITE.jpg"
+        credits = "Bot by Threat Level Gaming"
+        creditIcon = "https://cdn.discordapp.com/attachments/718649031009501285/772704601384157184/image0.png"
         return discord.Embed(**kwargs).set_footer(
             text=credits,
             icon_url=creditIcon
@@ -330,7 +330,7 @@ class Welcome(commands.Cog):
         embed.set_author(name=user.name, icon_url=avatar)
 
         try:
-            data = self.user_history[user.id]["data"]
+            dhow 
         except KeyError:
             return await channel.send(embed=embed)
 
