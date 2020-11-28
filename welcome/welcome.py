@@ -217,7 +217,7 @@ class Welcome(commands.Cog):
         except (discord.Forbidden, discord.HTTPException):
             pass
 
-        role = discord.utils.get(member.guild.roles, name="Visitor")
+        role = discord.utils.get(member.guild.roles, name="Community")
         try:
             await member.add_roles(role)
         except (discord.Forbidden, discord.HTTPException):
