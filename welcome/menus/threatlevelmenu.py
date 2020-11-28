@@ -300,8 +300,7 @@ class ThreatLevelMenu():
         "embed": welcome.embed(title="That was it", color=discord.Color.orange(),
                        description="Your chosen clan has been informed. "
                                    " Please wait in #global channel "
-                                   "while a discord officer comes to approve you.\n\n"
-                                   " Please do not join any clans without talking to an officer.\n\n"
+                                   "while a staff member comes to approve you.\n\n"
                                    "**Enjoy your stay!**"),
         "options": [
             {
