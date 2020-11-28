@@ -13,7 +13,7 @@ class ThreatLevelMenu():
                                    "<a:goblinstab:468708996153475072>\n\n"
                                    "We are glad you joined us, can we ask a few questions "
                                    "to customize your experience?"),
-        "thumbnail": "https://i.imgur.com/8SRsdQz.png",
+        "thumbnail": "https://cdn.discordapp.com/attachments/718649031009501285/772704601384157184/image0.png",
         "options": [
             {
                 "name": "Yes please!",
