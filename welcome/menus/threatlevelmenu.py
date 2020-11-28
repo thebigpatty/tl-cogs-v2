@@ -289,7 +289,7 @@ class ThreatLevelMenu():
         "track": True
     },
     "join_clan": {
-        "embed": welcome.embed(title="Legend Family Clans", color=discord.Color.orange(),
+        "embed": welcome.embed(title="Threat Level Clans", color=discord.Color.orange(),
                        description="Here are all our clans, which clan do you prefer?"),
         "dynamic_options": "clans_options",
         "options": [],
