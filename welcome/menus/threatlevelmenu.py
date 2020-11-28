@@ -38,13 +38,6 @@ class ThreatLevelMenu():
                                    "But where exactly did you find us?"),
         "options": [
             {
-                "name": "Legend Website",
-                "emoji": Letter.a,
-                "execute": {
-                    "menu": "location_menu"
-                }
-            },
-            {
                 "name": "RoyaleAPI Website",
                 "emoji": Letter.b,
                 "execute": {
