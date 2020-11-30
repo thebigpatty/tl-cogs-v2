@@ -432,6 +432,19 @@ class Welcome(commands.Cog):
             user = ctx.message.author
         await self.on_member_join(user)
 
+    @_welcome.command()
+    @commands.guild_only()
+    @checks.admin_or_permissions(manage_guild=True)    
+    async def verify(self, ctx, user:discord.Member = None):
+        """Runs the verify membership function. Debug only.
+
+        For example: `[p]weclome verify [user]
+        """
+        if user is None:
+            user = ctx.message.author
+        await self.verify_membership(user)
+
+
     @_welcome.command(name="server")
     @commands.guild_only()
     @checks.admin_or_permissions(manage_guild=True)
