@@ -501,6 +501,16 @@ class Welcome(commands.Cog):
         await ctx.send("Module set.")
         await self.load_menu_module()
 
+    @_welcome.command(name="jump")
+    @commands.guild_only()
+    @checks.admin_or_permissions(manage_guild=True)
+    async def jump(self, ctx, menu_name:str):
+        await self.load_menu(ctx.message.author, menu_name)
+        if (ctx.message.author.id not in self.user_history):
+            self.user_history[ctx.message.author.id] = {"history": ["main", menu_name], "data": {}}
+        else:
+            self.user_history[ctx.message.author.id]["history"].append(menu_name)
+
     @commands.command()
     async def savetag(self, ctx, profiletag: str):
         """ save your Clash Royale Profile Tag
