@@ -100,57 +100,36 @@ class ThreatLevelMenu():
                 }
             },
             {
-                "name": "South America",
+                "name": "Latin America",
                 "emoji": Letter.b,
                 "execute": {
                     "menu": "save_tag_menu"
                 }
             },
             {
-                "name": "Northern Africa",
+                "name": "Europe",
                 "emoji": Letter.c,
                 "execute": {
                     "menu": "save_tag_menu"
                 }
             },
             {
-                "name": "Southern Africa",
+                "name": "Asia Pacific",
                 "emoji": Letter.d,
                 "execute": {
                     "menu": "save_tag_menu"
                 }
             },
             {
-                "name": "Europe",
+                "name": "Oceania",
                 "emoji": Letter.e,
                 "execute": {
                     "menu": "save_tag_menu"
                 }
             },
             {
-                "name": "Middle East",
+                "name": "Rest of World",
                 "emoji": Letter.f,
-                "execute": {
-                    "menu": "save_tag_menu"
-                }
-            },
-            {
-                "name": "Asia",
-                "emoji": Letter.g,
-                "execute": {
-                    "menu": "save_tag_menu"
-                }
-            },
-            {
-                "name": "Southeast Asia",
-                "emoji": Letter.h,
-                "execute": {
-                    "menu": "save_tag_menu"
-                }
-            },
-            {
-                "name": "Australia",
-                "emoji": Letter.i,
                 "execute": {
                     "menu": "save_tag_menu"
                 }
