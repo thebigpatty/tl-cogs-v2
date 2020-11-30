@@ -7,6 +7,7 @@ import importlib
 
 import clashroyale
 import discord
+import json
 from redbot.core import commands, checks, Config
 from redbot.core.data_manager import bundled_data_path, cog_data_path
 
@@ -34,9 +35,6 @@ class Welcome(commands.Cog):
         self.config.register_global(**default_global)
         default_guild = {}
         self.config.register_guild(**default_guild)
-        self.claninfo_path = str(cog_data_path(self.clans) / "clans.json")
-        with open(self.claninfo_path) as file:
-            self.family_clans = dict(json.load(file))
         self.welcome_path = str(bundled_data_path(self.clans) / "welcome_messages.json")
         with open(self.welcome_path) as file:
             self.welcome = dict(json.load(file))
@@ -132,6 +130,7 @@ class Welcome(commands.Cog):
                 return
 
     async def load_menu(self, user: discord.Member, menu: str):
+        print(f"Loading Menu {menu}")
         menu = self.menu.get(menu)
         message = ""
         reactions = []
@@ -235,7 +234,7 @@ class Welcome(commands.Cog):
                     clantag = ""
                 else:
                     clantag = player_data.clan.tag.strip("#")
-                for name, data in self.family_clans.items():
+                for name, data in self.clans.family_clans.items():
                     if data.get("tag") == clantag:
                         membership = True
                         clans_joined.append(data.get("nickname"))
@@ -274,18 +273,22 @@ class Welcome(commands.Cog):
     async def clans_options(self, user):
         clandata = []
         options = []
-        for clankey, data in self.family_clans.items():
+        for clankey, data in self.clans.family_clans.items():
             try:
-                clan = await self.clash.get_clan(data.get('tag'))
+                clan = await self.clans.get_clandata_by_tag(data.get('tag'))
+                if (clan is None):
+                    print(f"Error loading tag {data.get('tag')}")
+                    continue
+
                 clandata.append(clan)
             except clashroyale.RequestError:
                 return await user.dm_channel.send("Error: cannot reach Clash Royale Servers. Please try again later.")
 
-        clandata = sorted(clandata, key=lambda x: (x.required_trophies, x.clan_score), reverse=True)
+        clandata = sorted(clandata, key=lambda x: (x["required_trophies"], x["clan_score"]), reverse=True)
 
         index = 0
         for clan in clandata:
-            clankey = clan.name
+            clankey = clan["name"]
 
             member_count = clan.get("members")
             if member_count < 50:
@@ -293,7 +296,7 @@ class Welcome(commands.Cog):
             else:
                 showMembers = "**FULL**"
 
-            title = "[{}] {} ({}+) ".format(showMembers, clan.name, clan.required_trophies)
+            title = "[{}] {} ({}+) ".format(showMembers, clan["name"], clan["required_trophies"])
 
             options.append({
                 "name": title,
