@@ -30,7 +30,8 @@ class Welcome(commands.Cog):
         self.joined = []
         self.config = Config.get_conf(self, identifier=251098479837495659987)
         default_global = {
-            "module": "ThreatLevelMenu"
+            "module": "ThreatLevelMenu",
+            "enabled": False
         }
         self.config.register_global(**default_global)
         default_guild = {}
@@ -368,8 +369,7 @@ class Welcome(commands.Cog):
 
         await channel.send(embed=embed)
 
-    @commands.Cog.listener()
-    async def on_member_join(self, member:discord.Member):
+    async def launch_menu(self, member:discord.Member):
         guild = member.guild
         # Allow command to be run in legend server. Use list so test servers can be added
         if guild.id != await self.config.server_id():
@@ -392,6 +392,12 @@ class Welcome(commands.Cog):
             self.user_history[member.id] = {"history": ["main", menu_name], "data": {}}
 
     @commands.Cog.listener()
+    async def on_member_join(self, member:discord.Member):
+        if await self.config.enabled():
+            self.launch_menu(member)
+
+
+    @commands.Cog.listener()
     async def on_member_remove(self, member:discord.Member):
         guild = member.guild
         if guild.id != await self.config.server_id():
@@ -409,7 +415,8 @@ class Welcome(commands.Cog):
             if user.id not in self.joined:
                 return
             history = {"history": ["main"], "data": {}}
-
+            print(user)
+            print(self.user)
             if user.id in self.user_history:
                 history = self.user_history[user.id]
             else:
@@ -433,7 +440,7 @@ class Welcome(commands.Cog):
         """
         if user is None:
             user = ctx.message.author
-        await self.on_member_join(user)
+        await self.launch_menu(user)
 
     @_welcome.command()
     @commands.guild_only()
@@ -461,6 +468,28 @@ class Welcome(commands.Cog):
             return
         await self.config.server_id.set(int(server_id))
         await ctx.send("Server ID set.")
+
+    @_welcome.command(name="enable")
+    @commands.guild_only()
+    @checks.admin_or_permissions(manage_guild=True)
+    async def enable(self, ctx):
+        """Enables the on_member_join callback.
+
+        For example: `[p]weclome enable
+        """
+        await self.config.enabled.set(True)
+        await ctx.send("Welcome cog enabled.")
+
+    @_welcome.command(name="disable")
+    @commands.guild_only()
+    @checks.admin_or_permissions(manage_guild=True)
+    async def disable(self, ctx):
+        """Disables the on_member_join callback.
+
+        For example: `[p]weclome disable
+        """
+        await self.config.enabled.set(False)
+        await ctx.send("Welcome cog disabled.")
 
     @_welcome.command(name="log")
     @commands.guild_only()
