@@ -36,49 +36,49 @@ class ThreatLevelMenu():
         "options": [
             {
                 "name": "RoyaleAPI Website",
-                "emoji": Letter.b,
+                "emoji": Letter.a,
                 "execute": {
                     "menu": "location_menu"
                 }
             },
             {
                 "name": "Reddit",
-                "emoji": Letter.c,
+                "emoji": Letter.b,
                 "execute": {
                     "menu": "location_menu"
                 }
             },
             {
                 "name": "Discord",
-                "emoji": Letter.d,
+                "emoji": Letter.c,
                 "execute": {
                     "menu": "location_menu"
                 }
             },
             {
                 "name": "Twitter",
-                "emoji": Letter.e,
+                "emoji": Letter.d,
                 "execute": {
                     "menu": "location_menu"
                 }
             },
             {
                 "name": "From in-game",
-                "emoji": Letter.f,
+                "emoji": Letter.e,
                 "execute": {
                     "menu": "location_menu"
                 }
             },
             {
                 "name": "Friend or Family",
-                "emoji": Letter.g,
+                "emoji": Letter.f,
                 "execute": {
                     "menu": "location_menu"
                 }
             },
             {
                 "name": "Other",
-                "emoji": Letter.h,
+                "emoji": Letter.g,
                 "execute": {
                     "menu": "location_menu"
                 }
