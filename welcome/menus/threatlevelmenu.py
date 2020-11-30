@@ -96,63 +96,63 @@ class ThreatLevelMenu():
                 "name": "North America",
                 "emoji": Letter.a,
                 "execute": {
-                    "menu": "age_menu"
+                    "menu": "save_tag_menu"
                 }
             },
             {
                 "name": "South America",
                 "emoji": Letter.b,
                 "execute": {
-                    "menu": "age_menu"
+                    "menu": "save_tag_menu"
                 }
             },
             {
                 "name": "Northern Africa",
                 "emoji": Letter.c,
                 "execute": {
-                    "menu": "age_menu"
+                    "menu": "save_tag_menu"
                 }
             },
             {
                 "name": "Southern Africa",
                 "emoji": Letter.d,
                 "execute": {
-                    "menu": "age_menu"
+                    "menu": "save_tag_menu"
                 }
             },
             {
                 "name": "Europe",
                 "emoji": Letter.e,
                 "execute": {
-                    "menu": "age_menu"
+                    "menu": "save_tag_menu"
                 }
             },
             {
                 "name": "Middle East",
                 "emoji": Letter.f,
                 "execute": {
-                    "menu": "age_menu"
+                    "menu": "save_tag_menu"
                 }
             },
             {
                 "name": "Asia",
                 "emoji": Letter.g,
                 "execute": {
-                    "menu": "age_menu"
+                    "menu": "save_tag_menu"
                 }
             },
             {
                 "name": "Southeast Asia",
                 "emoji": Letter.h,
                 "execute": {
-                    "menu": "age_menu"
+                    "menu": "save_tag_menu"
                 }
             },
             {
                 "name": "Australia",
                 "emoji": Letter.i,
                 "execute": {
-                    "menu": "age_menu"
+                    "menu": "save_tag_menu"
                 }
             }
         ],
