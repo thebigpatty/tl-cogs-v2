@@ -324,7 +324,7 @@ class Welcome(commands.Cog):
         embed.set_author(name=user.name, icon_url=avatar)
 
         try:
-            dhow 
+            data = self.user_history[user.id]["data"] 
         except KeyError:
             return await channel.send(embed=embed)
 
