@@ -27,7 +27,7 @@ class Welcome(commands.Cog):
         self.constants = self.bot.get_cog('ClashRoyaleTools').constants
         self.clans = self.bot.get_cog('ClashRoyaleClans')
         self.user_history = {}
-        self.joined = []
+        self.joined = {}
         self.config = Config.get_conf(self, identifier=251098479837495659987)
         default_global = {
             "module": "ThreatLevelMenu",
@@ -181,11 +181,12 @@ class Welcome(commands.Cog):
 
     async def _add_roles(self, member, role_names):
         """Add roles"""
-        roles = [discord.utils.get(member.guild.roles, name=role_name) for role_name in role_names]
+        guild = self.bot.get_guild(await self.config.server_id())
+        roles = [discord.utils.get(guild.roles, name=role_name) for role_name in role_names]
         if any([x is None for x in roles]):
             raise InvalidRole
         try:
-            await member.add_roles(*roles)
+            await guild.get_member(member.id).add_roles(*roles)
         except discord.Forbidden:
             raise
         except discord.HTTPException:
@@ -223,6 +224,7 @@ class Welcome(commands.Cog):
 
     async def verify_membership(self, member:discord.Member):
         guild = self.bot.get_guild(await self.config.server_id())
+        member = guild.get_member(member.id)
         membership = False
         clans_joined = []
         role_names = []
@@ -253,6 +255,9 @@ class Welcome(commands.Cog):
                 newname = ign + " | " + newclanname
                 await member.edit(nick=newname)
             except (discord.Forbidden, discord.HTTPException):
+                pass
+            except (AttributeError):
+                print("Cannot change the nickname of a server owner.")
                 pass
 
             role_names.append('Member')
@@ -374,7 +379,7 @@ class Welcome(commands.Cog):
         # Allow command to be run in legend server. Use list so test servers can be added
         if guild.id != await self.config.server_id():
             return
-        self.joined.append(member.id)
+        self.joined[member.id] = member
 
         await self.load_menu(member, "main")
 
@@ -411,18 +416,18 @@ class Welcome(commands.Cog):
 
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction: discord.Reaction, user: discord.Member):
-        if reaction.message.channel.type is discord.ChannelType.private and self.bot.user.id != user.id:
-            if user.id not in self.joined:
+        guild = self.bot.get_guild(await self.config.server_id())
+        member = guild.get_member(member.id)
+        if reaction.message.channel.type is discord.ChannelType.private and self.bot.user.id != member.id:
+            if member.id not in self.joined:
                 return
             history = {"history": ["main"], "data": {}}
-            print(user)
-            print(self.user)
-            if user.id in self.user_history:
-                history = self.user_history[user.id]
+            if member.id in self.user_history:
+                history = self.user_history[member.id]
             else:
-                self.user_history.update({user.id: history})
+                self.user_history.update({member.id: history})
 
-            await self.ReactionAddedHandler(reaction, user, history["history"], history["data"])
+            await self.ReactionAddedHandler(reaction, member, history["history"], history["data"])
 
 
     @commands.group(name='welcome')
@@ -534,10 +539,9 @@ class Welcome(commands.Cog):
         await self.load_menu_module()
 
     @_welcome.command(name="jump")
-    @commands.guild_only()
-    @checks.admin_or_permissions(manage_guild=True)
     async def jump(self, ctx, menu_name:str):
         await self.load_menu(ctx.message.author, menu_name)
+        self.joined[ctx.message.author.id] = ctx.message.author
         if (ctx.message.author.id not in self.user_history):
             self.user_history[ctx.message.author.id] = {"history": ["main", menu_name], "data": {}}
         else:
