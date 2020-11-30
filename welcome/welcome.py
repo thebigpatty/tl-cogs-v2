@@ -417,7 +417,7 @@ class Welcome(commands.Cog):
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction: discord.Reaction, user: discord.Member):
         guild = self.bot.get_guild(await self.config.server_id())
-        member = guild.get_member(member.id)
+        member = guild.get_member(user.id)
         if reaction.message.channel.type is discord.ChannelType.private and self.bot.user.id != member.id:
             if member.id not in self.joined:
                 return
@@ -564,7 +564,7 @@ class Welcome(commands.Cog):
             return await ctx.send("The ID you provided has invalid characters. Please try again.")
 
         try:
-            profiledata = await self.clash.get_player(profiletag)
+            profiledata = await self.clash.get_player(rofiletag)
             name = profiledata.name
 
             if profiledata.clan is not None:
