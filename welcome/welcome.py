@@ -260,7 +260,7 @@ class Welcome(commands.Cog):
                 print("Cannot change the nickname of a server owner.")
                 pass
 
-            role_names.append('Member')
+            role_names.append('Community')
             try:
                 await self._add_roles(member, role_names)
             except (discord.Forbidden, discord.HTTPException):
