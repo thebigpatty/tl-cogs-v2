@@ -13,7 +13,7 @@ class ThreatLevelMenu():
                                    "<a:goblinstab:468708996153475072>\n\n"
                                    "We are glad you joined us, can we ask a few questions "
                                    "to customize your experience?"),
-        "thumbnail": "https://i.imgur.com/8SRsdQz.png",
+        "thumbnail": "https://cdn.discordapp.com/attachments/718649031009501285/772704601384157184/image0.png",
         "options": [
             {
                 "name": "Yes please!",
@@ -37,13 +37,6 @@ class ThreatLevelMenu():
                        description="We know you are from the interwebz. "
                                    "But where exactly did you find us?"),
         "options": [
-            {
-                "name": "Legend Website",
-                "emoji": Letter.a,
-                "execute": {
-                    "menu": "location_menu"
-                }
-            },
             {
                 "name": "RoyaleAPI Website",
                 "emoji": Letter.b,
@@ -296,7 +289,7 @@ class ThreatLevelMenu():
         "track": True
     },
     "join_clan": {
-        "embed": welcome.embed(title="Legend Family Clans", color=discord.Color.orange(),
+        "embed": welcome.embed(title="Threat Level Clans", color=discord.Color.orange(),
                        description="Here are all our clans, which clan do you prefer?"),
         "dynamic_options": "clans_options",
         "options": [],
@@ -306,13 +299,12 @@ class ThreatLevelMenu():
     "end_member": {
         "embed": welcome.embed(title="That was it", color=discord.Color.orange(),
                        description="Your chosen clan has been informed. "
-                                   " Please wait in #welcome-gate channel "
-                                   "while a discord officer comes to approve you.\n\n"
-                                   " Please do not join any clans without talking to an officer.\n\n"
+                                   " Please wait in #global channel "
+                                   "while a staff member comes to approve you.\n\n"
                                    "**Enjoy your stay!**"),
         "options": [
             {
-                "name": "Go to #welcome-gate",
+                "name": "Go to global",
                 "emoji": Letter.a,
                 "execute": {
                     "menu": "welcome_gate"
@@ -325,13 +317,13 @@ class ThreatLevelMenu():
     "end_human": {
         "embed": welcome.embed(title="Requesting assistance", color=discord.Color.orange(),
                        description="We have notified our officers about your information."
-                                   " Please wait in #welcome-gate "
+                                   " Please wait in #global "
                                    "channel while an officer comes and helps you.\n\n"
                                    " Please do not join any clans without talking to an officer.\n\n"
                                    "**Enjoy your stay!**"),
         "options": [
             {
-                "name": "Go to #welcome-gate",
+                "name": "Go to global",
                 "emoji": Letter.a,
                 "execute": {
                     "menu": "welcome_gate"
@@ -369,10 +361,10 @@ class ThreatLevelMenu():
         "embed": welcome.embed(title="Enjoy your stay", color=discord.Color.orange(),
                        description="We look forward to welcoming "
                                    "you into the Legend Clan Family!\n\n"
-                                   "You can go talk to an officer in #welcome-gate. "),
+                                   "You can go talk to an officer in #global. "),
         "options": [
             {
-                "name": "Go to #welcome-gate",
+                "name": "Go to global",
                 "emoji": Letter.a,
                 "execute": {
                     "menu": "welcome_gate"
@@ -396,8 +388,8 @@ class ThreatLevelMenu():
         "hide_options": True
     },
     "welcome_gate": {
-        "embed": welcome.embed(title="#welcome-gate", color=discord.Color.orange(),
-                       description="Click here: https://discord.gg/yhD84nK"),
+        "embed": welcome.embed(title="global", color=discord.Color.orange(),
+                       description="Click here: https://discord.gg/MZpvE2pj"),
         "options": [
             {
                 "name": "Done",
