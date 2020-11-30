@@ -7,6 +7,7 @@ import importlib
 
 import clashroyale
 import discord
+import json
 from redbot.core import commands, checks, Config
 from redbot.core.data_manager import bundled_data_path, cog_data_path
 
@@ -26,17 +27,15 @@ class Welcome(commands.Cog):
         self.constants = self.bot.get_cog('ClashRoyaleTools').constants
         self.clans = self.bot.get_cog('ClashRoyaleClans')
         self.user_history = {}
-        self.joined = []
+        self.joined = {}
         self.config = Config.get_conf(self, identifier=251098479837495659987)
         default_global = {
-            "module": "ThreatLevelMenu"
+            "module": "ThreatLevelMenu",
+            "enabled": False
         }
         self.config.register_global(**default_global)
         default_guild = {}
         self.config.register_guild(**default_guild)
-        self.claninfo_path = str(cog_data_path(self.clans) / "clans.json")
-        with open(self.claninfo_path) as file:
-            self.family_clans = dict(json.load(file))
         self.welcome_path = str(bundled_data_path(self.clans) / "welcome_messages.json")
         with open(self.welcome_path) as file:
             self.welcome = dict(json.load(file))
@@ -132,6 +131,7 @@ class Welcome(commands.Cog):
                 return
 
     async def load_menu(self, user: discord.Member, menu: str):
+        print(f"Loading Menu {menu}")
         menu = self.menu.get(menu)
         message = ""
         reactions = []
@@ -181,11 +181,12 @@ class Welcome(commands.Cog):
 
     async def _add_roles(self, member, role_names):
         """Add roles"""
-        roles = [discord.utils.get(member.guild.roles, name=role_name) for role_name in role_names]
+        guild = self.bot.get_guild(await self.config.server_id())
+        roles = [discord.utils.get(guild.roles, name=role_name) for role_name in role_names]
         if any([x is None for x in roles]):
             raise InvalidRole
         try:
-            await member.add_roles(*roles)
+            await guild.get_member(member.id).add_roles(*roles)
         except discord.Forbidden:
             raise
         except discord.HTTPException:
@@ -223,6 +224,7 @@ class Welcome(commands.Cog):
 
     async def verify_membership(self, member:discord.Member):
         guild = self.bot.get_guild(await self.config.server_id())
+        member = guild.get_member(member.id)
         membership = False
         clans_joined = []
         role_names = []
@@ -235,7 +237,7 @@ class Welcome(commands.Cog):
                     clantag = ""
                 else:
                     clantag = player_data.clan.tag.strip("#")
-                for name, data in self.family_clans.items():
+                for name, data in self.clans.family_clans.items():
                     if data.get("tag") == clantag:
                         membership = True
                         clans_joined.append(data.get("nickname"))
@@ -253,6 +255,9 @@ class Welcome(commands.Cog):
                 newname = ign + " | " + newclanname
                 await member.edit(nick=newname)
             except (discord.Forbidden, discord.HTTPException):
+                pass
+            except (AttributeError):
+                print("Cannot change the nickname of a server owner.")
                 pass
 
             role_names.append('Member')
@@ -274,18 +279,22 @@ class Welcome(commands.Cog):
     async def clans_options(self, user):
         clandata = []
         options = []
-        for clankey, data in self.family_clans.items():
+        for clankey, data in self.clans.family_clans.items():
             try:
-                clan = await self.clash.get_clan(data.get('tag'))
+                clan = await self.clans.get_clandata_by_tag(data.get('tag'))
+                if (clan is None):
+                    print(f"Error loading tag {data.get('tag')}")
+                    continue
+
                 clandata.append(clan)
             except clashroyale.RequestError:
                 return await user.dm_channel.send("Error: cannot reach Clash Royale Servers. Please try again later.")
 
-        clandata = sorted(clandata, key=lambda x: (x.required_trophies, x.clan_score), reverse=True)
+        clandata = sorted(clandata, key=lambda x: (x["required_trophies"], x["clan_score"]), reverse=True)
 
         index = 0
         for clan in clandata:
-            clankey = clan.name
+            clankey = clan["name"]
 
             member_count = clan.get("members")
             if member_count < 50:
@@ -293,7 +302,7 @@ class Welcome(commands.Cog):
             else:
                 showMembers = "**FULL**"
 
-            title = "[{}] {} ({}+) ".format(showMembers, clan.name, clan.required_trophies)
+            title = "[{}] {} ({}+) ".format(showMembers, clan["name"], clan["required_trophies"])
 
             options.append({
                 "name": title,
@@ -324,7 +333,7 @@ class Welcome(commands.Cog):
         embed.set_author(name=user.name, icon_url=avatar)
 
         try:
-            dhow 
+            data = self.user_history[user.id]["data"] 
         except KeyError:
             return await channel.send(embed=embed)
 
@@ -365,13 +374,12 @@ class Welcome(commands.Cog):
 
         await channel.send(embed=embed)
 
-    @commands.Cog.listener()
-    async def on_member_join(self, member:discord.Member):
+    async def launch_menu(self, member:discord.Member):
         guild = member.guild
         # Allow command to be run in legend server. Use list so test servers can be added
         if guild.id != await self.config.server_id():
             return
-        self.joined.append(member.id)
+        self.joined[member.id] = member
 
         await self.load_menu(member, "main")
 
@@ -389,6 +397,12 @@ class Welcome(commands.Cog):
             self.user_history[member.id] = {"history": ["main", menu_name], "data": {}}
 
     @commands.Cog.listener()
+    async def on_member_join(self, member:discord.Member):
+        if await self.config.enabled():
+            self.launch_menu(member)
+
+
+    @commands.Cog.listener()
     async def on_member_remove(self, member:discord.Member):
         guild = member.guild
         if guild.id != await self.config.server_id():
@@ -402,17 +416,18 @@ class Welcome(commands.Cog):
 
     @commands.Cog.listener()
     async def on_reaction_add(self, reaction: discord.Reaction, user: discord.Member):
-        if reaction.message.channel.type is discord.ChannelType.private and self.bot.user.id != user.id:
-            if user.id not in self.joined:
+        guild = self.bot.get_guild(await self.config.server_id())
+        member = guild.get_member(member.id)
+        if reaction.message.channel.type is discord.ChannelType.private and self.bot.user.id != member.id:
+            if member.id not in self.joined:
                 return
             history = {"history": ["main"], "data": {}}
-
-            if user.id in self.user_history:
-                history = self.user_history[user.id]
+            if member.id in self.user_history:
+                history = self.user_history[member.id]
             else:
-                self.user_history.update({user.id: history})
+                self.user_history.update({member.id: history})
 
-            await self.ReactionAddedHandler(reaction, user, history["history"], history["data"])
+            await self.ReactionAddedHandler(reaction, member, history["history"], history["data"])
 
 
     @commands.group(name='welcome')
@@ -430,7 +445,20 @@ class Welcome(commands.Cog):
         """
         if user is None:
             user = ctx.message.author
-        await self.on_member_join(user)
+        await self.launch_menu(user)
+
+    @_welcome.command()
+    @commands.guild_only()
+    @checks.admin_or_permissions(manage_guild=True)    
+    async def verify(self, ctx, user:discord.Member = None):
+        """Runs the verify membership function. Debug only.
+
+        For example: `[p]weclome verify [user]
+        """
+        if user is None:
+            user = ctx.message.author
+        await self.verify_membership(user)
+
 
     @_welcome.command(name="server")
     @commands.guild_only()
@@ -445,6 +473,28 @@ class Welcome(commands.Cog):
             return
         await self.config.server_id.set(int(server_id))
         await ctx.send("Server ID set.")
+
+    @_welcome.command(name="enable")
+    @commands.guild_only()
+    @checks.admin_or_permissions(manage_guild=True)
+    async def enable(self, ctx):
+        """Enables the on_member_join callback.
+
+        For example: `[p]weclome enable
+        """
+        await self.config.enabled.set(True)
+        await ctx.send("Welcome cog enabled.")
+
+    @_welcome.command(name="disable")
+    @commands.guild_only()
+    @checks.admin_or_permissions(manage_guild=True)
+    async def disable(self, ctx):
+        """Disables the on_member_join callback.
+
+        For example: `[p]weclome disable
+        """
+        await self.config.enabled.set(False)
+        await ctx.send("Welcome cog disabled.")
 
     @_welcome.command(name="log")
     @commands.guild_only()
@@ -487,6 +537,15 @@ class Welcome(commands.Cog):
         await self.config.module.set(module)
         await ctx.send("Module set.")
         await self.load_menu_module()
+
+    @_welcome.command(name="jump")
+    async def jump(self, ctx, menu_name:str):
+        await self.load_menu(ctx.message.author, menu_name)
+        self.joined[ctx.message.author.id] = ctx.message.author
+        if (ctx.message.author.id not in self.user_history):
+            self.user_history[ctx.message.author.id] = {"history": ["main", menu_name], "data": {}}
+        else:
+            self.user_history[ctx.message.author.id]["history"].append(menu_name)
 
     @commands.command()
     async def savetag(self, ctx, profiletag: str):

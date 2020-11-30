@@ -8,9 +8,6 @@ class ThreatLevelMenu():
     "main": {
         "embed": welcome.embed(title="Welcome", color=discord.Color.orange(),
                        description="Welcome to the **Threat Level** Server, {0.mention}! "
-                                   "We are one of the oldest and biggest families in "
-                                   "Clash Royale with our 700 members and 15 clans! "
-                                   "<a:goblinstab:468708996153475072>\n\n"
                                    "We are glad you joined us, can we ask a few questions "
                                    "to customize your experience?"),
         "thumbnail": "https://cdn.discordapp.com/attachments/718649031009501285/772704601384157184/image0.png",
@@ -39,49 +36,49 @@ class ThreatLevelMenu():
         "options": [
             {
                 "name": "RoyaleAPI Website",
-                "emoji": Letter.b,
+                "emoji": Letter.a,
                 "execute": {
                     "menu": "location_menu"
                 }
             },
             {
                 "name": "Reddit",
-                "emoji": Letter.c,
+                "emoji": Letter.b,
                 "execute": {
                     "menu": "location_menu"
                 }
             },
             {
                 "name": "Discord",
-                "emoji": Letter.d,
+                "emoji": Letter.c,
                 "execute": {
                     "menu": "location_menu"
                 }
             },
             {
                 "name": "Twitter",
-                "emoji": Letter.e,
+                "emoji": Letter.d,
                 "execute": {
                     "menu": "location_menu"
                 }
             },
             {
                 "name": "From in-game",
-                "emoji": Letter.f,
+                "emoji": Letter.e,
                 "execute": {
                     "menu": "location_menu"
                 }
             },
             {
                 "name": "Friend or Family",
-                "emoji": Letter.g,
+                "emoji": Letter.f,
                 "execute": {
                     "menu": "location_menu"
                 }
             },
             {
                 "name": "Other",
-                "emoji": Letter.h,
+                "emoji": Letter.g,
                 "execute": {
                     "menu": "location_menu"
                 }
@@ -99,63 +96,42 @@ class ThreatLevelMenu():
                 "name": "North America",
                 "emoji": Letter.a,
                 "execute": {
-                    "menu": "age_menu"
+                    "menu": "save_tag_menu"
                 }
             },
             {
-                "name": "South America",
+                "name": "Latin America",
                 "emoji": Letter.b,
                 "execute": {
-                    "menu": "age_menu"
-                }
-            },
-            {
-                "name": "Northern Africa",
-                "emoji": Letter.c,
-                "execute": {
-                    "menu": "age_menu"
-                }
-            },
-            {
-                "name": "Southern Africa",
-                "emoji": Letter.d,
-                "execute": {
-                    "menu": "age_menu"
+                    "menu": "save_tag_menu"
                 }
             },
             {
                 "name": "Europe",
+                "emoji": Letter.c,
+                "execute": {
+                    "menu": "save_tag_menu"
+                }
+            },
+            {
+                "name": "Asia Pacific",
+                "emoji": Letter.d,
+                "execute": {
+                    "menu": "save_tag_menu"
+                }
+            },
+            {
+                "name": "Oceania",
                 "emoji": Letter.e,
                 "execute": {
-                    "menu": "age_menu"
+                    "menu": "save_tag_menu"
                 }
             },
             {
-                "name": "Middle East",
+                "name": "Rest of World",
                 "emoji": Letter.f,
                 "execute": {
-                    "menu": "age_menu"
-                }
-            },
-            {
-                "name": "Asia",
-                "emoji": Letter.g,
-                "execute": {
-                    "menu": "age_menu"
-                }
-            },
-            {
-                "name": "Southeast Asia",
-                "emoji": Letter.h,
-                "execute": {
-                    "menu": "age_menu"
-                }
-            },
-            {
-                "name": "Australia",
-                "emoji": Letter.i,
-                "execute": {
-                    "menu": "age_menu"
+                    "menu": "save_tag_menu"
                 }
             }
         ],
@@ -254,7 +230,7 @@ class ThreatLevelMenu():
         "embed": welcome.embed(title="Type in your tag", color=discord.Color.orange(),
                        description="Please type **!savetag #YOURTAG** below to submit your ID.\n\n"
                                    "You can find your player tag in your profile in game."),
-        "image": "https://legendclans.com/wp-content/uploads/2017/11/profile_screen3.png",
+        "image": "https://cdn.discordapp.com/attachments/718649031009501285/753077777946771467/SaveTag.png",
         "options": [],
         "go_back": True
     },
@@ -335,7 +311,7 @@ class ThreatLevelMenu():
     },
     "end_guest": {
         "embed": welcome.embed(title="Enjoy your stay", color=discord.Color.orange(),
-                       description="Welcome to the **Legend Family** Discord server. "
+                       description="Welcome to the **Threat Level** Discord server. "
                        "If you would like guest role, please ping any of officer in #visitor-guest-welcome."
                        "Thanks + enjoy!\n"),
         "options": [],
@@ -347,7 +323,7 @@ class ThreatLevelMenu():
                        description="We have unlocked all member channels for you, enjoy your stay!"),
         "options": [
             {
-                "name": "Go to #global-chat",
+                "name": "Go to #global",
                 "emoji": Letter.a,
                 "execute": {
                     "menu": "global_chat"
@@ -360,7 +336,7 @@ class ThreatLevelMenu():
     "leave_alone": {
         "embed": welcome.embed(title="Enjoy your stay", color=discord.Color.orange(),
                        description="We look forward to welcoming "
-                                   "you into the Legend Clan Family!\n\n"
+                                   "you into the Threat Level Family!\n\n"
                                    "You can go talk to an officer in #global. "),
         "options": [
             {
@@ -375,8 +351,8 @@ class ThreatLevelMenu():
         "finished": True
     },
     "global_chat": {
-        "embed": welcome.embed(title="#global-chat", color=discord.Color.orange(),
-                       description="Click here: https://discord.gg/T7XdjFS"),
+        "embed": welcome.embed(title="#global", color=discord.Color.orange(),
+                       description="Click here: https://discord.gg/U2kzPTFQ"),
         "options": [
             {
                 "name": "Done",
@@ -389,7 +365,7 @@ class ThreatLevelMenu():
     },
     "welcome_gate": {
         "embed": welcome.embed(title="global", color=discord.Color.orange(),
-                       description="Click here: https://discord.gg/MZpvE2pj"),
+                       description="Click here: https://discord.gg/U2kzPTFQ"),
         "options": [
             {
                 "name": "Done",
