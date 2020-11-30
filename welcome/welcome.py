@@ -564,7 +564,7 @@ class Welcome(commands.Cog):
             return await ctx.send("The ID you provided has invalid characters. Please try again.")
 
         try:
-            profiledata = await self.clash.get_player(profiletag)
+            profiledata = await self.clash.get_player(rofiletag)
             name = profiledata.name
 
             if profiledata.clan is not None:
