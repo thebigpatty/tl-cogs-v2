@@ -35,50 +35,43 @@ class ThreatLevelMenu():
                                    "But where exactly did you find us?"),
         "options": [
             {
-                "name": "RoyaleAPI Website",
+                "name": "Reddit",
                 "emoji": Letter.a,
                 "execute": {
                     "menu": "location_menu"
                 }
             },
             {
-                "name": "Reddit",
+                "name": "Discord",
                 "emoji": Letter.b,
                 "execute": {
                     "menu": "location_menu"
                 }
             },
             {
-                "name": "Discord",
+                "name": "Twitter",
                 "emoji": Letter.c,
                 "execute": {
                     "menu": "location_menu"
                 }
             },
             {
-                "name": "Twitter",
+                "name": "From in-game",
                 "emoji": Letter.d,
                 "execute": {
                     "menu": "location_menu"
                 }
             },
             {
-                "name": "From in-game",
+                "name": "Friend or Family",
                 "emoji": Letter.e,
                 "execute": {
                     "menu": "location_menu"
                 }
             },
             {
-                "name": "Friend or Family",
-                "emoji": Letter.f,
-                "execute": {
-                    "menu": "location_menu"
-                }
-            },
-            {
                 "name": "Other",
-                "emoji": Letter.g,
+                "emoji": Letter.f,
                 "execute": {
                     "menu": "location_menu"
                 }
