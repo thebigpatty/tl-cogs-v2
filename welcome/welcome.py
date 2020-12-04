@@ -240,7 +240,7 @@ class Welcome(commands.Cog):
                 for name, data in self.clans.family_clans.items():
                     if data.get("tag") == clantag:
                         membership = True
-                        clans_joined.append(data.get("nickname"))
+                        clans_joined.append(data.get("name"))
                         role_names.append(data.get("clanrole"))
                         break
                 if ign is None:
