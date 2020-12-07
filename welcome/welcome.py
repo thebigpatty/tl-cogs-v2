@@ -62,7 +62,7 @@ class Welcome(commands.Cog):
         # Clash Royale API
         token = await self.bot.get_shared_api_tokens("clashroyale")
         if token['token'] is None:
-            print("CR Token is not SET. Use !set api clashroyale token,YOUR_TOKEN to set it")
+            log.error("CR Token is not SET. Use !set api clashroyale token,YOUR_TOKEN to set it")
         self.clash = clashroyale.official_api.Client(token=token['token'],
                                                   is_async=True,
                                                   url="https://proxy.royaleapi.dev/v1")
@@ -131,7 +131,7 @@ class Welcome(commands.Cog):
                 return
 
     async def load_menu(self, user: discord.Member, menu: str):
-        print(f"Loading Menu {menu}")
+        log.debug(f"Loading Menu {menu} for {user}")
         menu = self.menu.get(menu)
         message = ""
         reactions = []
@@ -180,9 +180,11 @@ class Welcome(commands.Cog):
         return new_message
 
     async def _add_roles(self, member, role_names):
+        log.debug(f"Assigning roles to {member}: {role_names}")
         """Add roles"""
         guild = self.bot.get_guild(await self.config.server_id())
         roles = [discord.utils.get(guild.roles, name=role_name) for role_name in role_names]
+        log.debug(f"Adding roles to {member}: {roles}")
         if any([x is None for x in roles]):
             raise InvalidRole
         try:
@@ -257,7 +259,7 @@ class Welcome(commands.Cog):
             except (discord.Forbidden, discord.HTTPException):
                 pass
             except (AttributeError):
-                print("Cannot change the nickname of a server owner.")
+                log.error("Cannot change the nickname of a server owner.")
                 pass
 
             role_names.append('Community')
@@ -283,7 +285,7 @@ class Welcome(commands.Cog):
             try:
                 clan = await self.clans.get_clandata_by_tag(data.get('tag'))
                 if (clan is None):
-                    print(f"Error loading tag {data.get('tag')}")
+                    log.error(f"Error loading tag {data.get('tag')}")
                     continue
 
                 clandata.append(clan)
@@ -398,8 +400,9 @@ class Welcome(commands.Cog):
 
     @commands.Cog.listener()
     async def on_member_join(self, member:discord.Member):
+        log.debug(f"Member joined: {member}")
         if await self.config.enabled():
-            self.launch_menu(member)
+            await self.launch_menu(member)
 
 
     @commands.Cog.listener()
