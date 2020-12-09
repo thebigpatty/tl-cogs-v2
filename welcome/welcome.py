@@ -105,7 +105,6 @@ class Welcome(commands.Cog):
             except discord.Forbidden:
                 return await self.logger(user)
             except discord.errors.NotFound:
-                log.error(f"Emoji {current_reaction} not found.")
                 retry += 1
 
         return new_message.id
@@ -131,7 +130,7 @@ class Welcome(commands.Cog):
                 return
 
     async def load_menu(self, user: discord.Member, menu: str):
-        log.debug(f"Loading Menu {menu} for {user}")
+        log.error(f"Loading Menu {menu} for {user}")
         menu = self.menu.get(menu)
         message = ""
         reactions = []
@@ -180,13 +179,13 @@ class Welcome(commands.Cog):
         return new_message
 
     async def _add_roles(self, member, role_names):
-        log.debug(f"Assigning roles to {member}: {role_names}")
+        log.error(f"Assigning roles to {member}: {role_names}")
         """Add roles"""
         guild = self.bot.get_guild(await self.config.server_id())
         roles = [discord.utils.get(guild.roles, name=role_name) for role_name in role_names]
-        log.debug(f"Adding roles to {member}: {roles}")
+        log.error(f"Adding roles to {member}: {roles}")
         if any([x is None for x in roles]):
-            raise InvalidRole
+            raise RuntimeError("A role wasn't found for {member} in {role_names} [{roles}]")
         try:
             await guild.get_member(member.id).add_roles(*roles)
         except discord.Forbidden:
@@ -201,17 +200,21 @@ class Welcome(commands.Cog):
 
     async def guest(self, member: discord.Member):
         """Add guest role and change nickname to CR"""
+        log.error(f"Running guest for {member}")
         guild = self.bot.get_guild(await self.config.server_id())
         member = guild.get_member(member.id)
         if not member:
+            log.error(f"{member} not found in the server.")
             return self.errorer(member)
         try:
             profiletag = self.tags.getTag(member.id, 1)
             if profiletag is None:
+                log.error(f"{member} couldn't find a tag.")
                 return await self.errorer(member)
             profiledata = await self.clash.get_player(profiletag)
             ign = profiledata.name
-        except clashroyale.RequestError:
+        except clashroyale.RequestError as err:
+            log.error(f"{member} couldn't get profiledata: {err}")
             return await self.errorer(member)
 
         role = discord.utils.get(member.guild.roles, name="Community")
@@ -247,9 +250,10 @@ class Welcome(commands.Cog):
                         break
                 if ign is None:
                     ign = player_data.name
-        except clashroyale.RequestError:
+        except clashroyale.RequestError as err: 
+            log.error(f"Verify Memebership Error: {err}")
             return await self.errorer(member)
-
+        log.error(f"Membership: {membership}")
         if membership:
             try:
                 new_name = ign
@@ -400,7 +404,7 @@ class Welcome(commands.Cog):
 
     @commands.Cog.listener()
     async def on_member_join(self, member:discord.Member):
-        log.debug(f"Member joined: {member}")
+        log.error(f"Member joined: {member}")
         if await self.config.enabled():
             await self.launch_menu(member)
 
