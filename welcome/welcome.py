@@ -203,6 +203,7 @@ class Welcome(commands.Cog):
         log.error(f"Running guest for {member}")
         guild = self.bot.get_guild(await self.config.server_id())
         member = guild.get_member(member.id)
+        role_names = []
         if not member:
             log.error(f"{member} not found in the server.")
             return self.errorer(member)
@@ -213,15 +214,13 @@ class Welcome(commands.Cog):
                 return await self.errorer(member)
             profiledata = await self.clash.get_player(profiletag)
             ign = profiledata.name
+            role_names.append("Clash Royale")
         except clashroyale.RequestError as err:
             log.error(f"{member} couldn't get profiledata: {err}")
             return await self.errorer(member)
 
-        role = discord.utils.get(member.guild.roles, name="Community")
-        try:
-            await member.add_roles(role)
-        except (discord.Forbidden, discord.HTTPException):
-            pass
+        role_names.append("Community")
+        await self._add_roles(member, role_names);
 
         menu_name = "end_guest"
         await self.load_menu(member, menu_name)
@@ -266,11 +265,10 @@ class Welcome(commands.Cog):
                 log.error("Cannot change the nickname of a server owner.")
                 pass
 
+            role_names.append("Clash Royale")
             role_names.append('Community')
-            try:
-                await self._add_roles(member, role_names)
-            except (discord.Forbidden, discord.HTTPException):
-                pass
+
+            await self._add_roles(member, role_names)
         else:
             return await self.errorer(member)
 
