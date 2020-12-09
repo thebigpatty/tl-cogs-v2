@@ -304,9 +304,7 @@ class ThreatLevelMenu():
     },
     "end_guest": {
         "embed": welcome.embed(title="Enjoy your stay", color=discord.Color.orange(),
-                       description="Welcome to the **Threat Level** Discord server. "
-                       "If you would like guest role, please ping any of officer in #visitor-guest-welcome."
-                       "Thanks + enjoy!\n"),
+                       description="We have unlocked all guest channels for you, enjoy your stay!"),
         "options": [],
         "go_back": False,
         "finished": True
