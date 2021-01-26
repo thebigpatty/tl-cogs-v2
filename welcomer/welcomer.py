@@ -18,7 +18,7 @@ gate_id = 374597911436328971
 credits = "Bot by Legend Gaming"
 creditIcon = "https://i.imgur.com/dtSMITE.jpg"
 
-log = logging.getLogger("red.cogs.welcome")
+log = logging.getLogger("red.cogs.welcomer")
 
 def embed(**kwargs):
     return discord.Embed(**kwargs).set_footer(
