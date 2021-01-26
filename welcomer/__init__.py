@@ -1,6 +1,6 @@
-from .welcome import Welcome
+from .welcomer import Welcomer
 
 async def setup(bot):
-    cog = Welcome(bot=bot)
+    cog = Welcomer(bot=bot)
     await cog.crtoken()
     bot.add_cog(cog)
