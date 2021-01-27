@@ -19,7 +19,7 @@ creditIcon = "https://cdn.discordapp.com/attachments/718649031009501285/77270460
 
 log = logging.getLogger("red.cogs.welcome")
 
-class Welcome(commands.Cog):
+class Welcomer(commands.Cog):
     """Commands for Clash Royale Family Management"""
 
     def __init__(self, bot):
