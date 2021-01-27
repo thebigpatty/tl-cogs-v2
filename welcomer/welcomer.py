@@ -17,7 +17,7 @@ from .menus.helper import Letter, Symbol
 credits = "Bot by Threat Level Gaming"
 creditIcon = "https://cdn.discordapp.com/attachments/718649031009501285/772704601384157184/image0.png"
 
-log = logging.getLogger("red.cogs.welcome")
+log = logging.getLogger("red.cogs.welcomer")
 
 class Welcomer(commands.Cog):
     """Commands for Clash Royale Family Management"""
@@ -52,7 +52,7 @@ class Welcomer(commands.Cog):
 
     async def load_menu_module(self):
         config_menu = await self.config.module()
-        module = importlib.import_module(".menus." + config_menu.lower(), package = 'welcome')
+        module = importlib.import_module(".menus." + config_menu.lower(), package = 'welcomer')
 
         class_ = getattr(module, config_menu)
         instance = class_(self)
@@ -441,11 +441,11 @@ class Welcomer(commands.Cog):
             await self.ReactionAddedHandler(reaction, member, history["history"], history["data"])
 
 
-    @commands.group(name='welcome')
-    async def _welcome(self, ctx):
+    @commands.group(name='welcomer')
+    async def _welcomer(self, ctx):
         """Welcome Command Group"""
 
-    @_welcome.command()
+    @_welcomer.command()
     @commands.guild_only()
     @checks.admin_or_permissions(manage_guild=True)
     async def menu(self, ctx, user:discord.Member = None):
@@ -458,7 +458,7 @@ class Welcomer(commands.Cog):
             user = ctx.message.author
         await self.launch_menu(user)
 
-    @_welcome.command()
+    @_welcomer.command()
     @commands.guild_only()
     @checks.admin_or_permissions(manage_guild=True)    
     async def verify(self, ctx, user:discord.Member = None):
@@ -471,7 +471,7 @@ class Welcomer(commands.Cog):
         await self.verify_membership(user)
 
 
-    @_welcome.command(name="server")
+    @_welcomer.command(name="server")
     @commands.guild_only()
     @checks.admin_or_permissions(manage_guild=True)
     async def server(self, ctx, server_id = None):
@@ -485,7 +485,7 @@ class Welcomer(commands.Cog):
         await self.config.server_id.set(int(server_id))
         await ctx.send("Server ID set.")
 
-    @_welcome.command(name="enable")
+    @_welcomer.command(name="enable")
     @commands.guild_only()
     @checks.admin_or_permissions(manage_guild=True)
     async def enable(self, ctx):
@@ -496,7 +496,7 @@ class Welcomer(commands.Cog):
         await self.config.enabled.set(True)
         await ctx.send("Welcome cog enabled.")
 
-    @_welcome.command(name="disable")
+    @_welcomer.command(name="disable")
     @commands.guild_only()
     @checks.admin_or_permissions(manage_guild=True)
     async def disable(self, ctx):
@@ -507,7 +507,7 @@ class Welcomer(commands.Cog):
         await self.config.enabled.set(False)
         await ctx.send("Welcome cog disabled.")
 
-    @_welcome.command(name="log")
+    @_welcomer.command(name="log")
     @commands.guild_only()
     @checks.admin_or_permissions(manage_guild=True)
     async def logchannel(self, ctx, channel:discord.TextChannel = None):
@@ -521,7 +521,7 @@ class Welcomer(commands.Cog):
         await self.config.log_channel_id.set(channel.id)
         await ctx.send("Log channel set.")
 
-    @_welcome.command(name="global")
+    @_welcomer.command(name="global")
     @commands.guild_only()
     @checks.admin_or_permissions(manage_guild=True)
     async def globalchannel(self, ctx, channel:discord.TextChannel):
@@ -535,7 +535,7 @@ class Welcomer(commands.Cog):
         await self.config.global_channel_id.set(channel.id)
         await ctx.send("Global channel set.")
 
-    @_welcome.command(name="module")
+    @_welcomer.command(name="module")
     @commands.guild_only()
     @checks.admin_or_permissions(manage_guild=True)
     async def module(self, ctx, module:str = None):
@@ -549,7 +549,7 @@ class Welcomer(commands.Cog):
         await ctx.send("Module set.")
         await self.load_menu_module()
 
-    @_welcome.command(name="jump")
+    @_welcomer.command(name="jump")
     async def jump(self, ctx, menu_name:str):
         await self.load_menu(ctx.message.author, menu_name)
         self.joined[ctx.message.author.id] = ctx.message.author
