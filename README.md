@@ -1,11 +1,11 @@
-# legendv3-cogs
-Cogs for Legend V3 
+# Threat Level AI cogs
+Cogs for Threat Level AI 
 
-## Legend Developers and Contributors
+## Threat Level Developers and Contributors
 - [Developers](docs/devs.md)
 
-## Legend BOT Development Guide
-- [Write a Legend Cog](docs/writing_legend_cogs.md)
+## Threat Level BOT Development Guide
+- [Write a Threat Level Cog](docs/writing_legend_cogs.md)
 
 ## Cogs documentation
 - [Fortune Teller](fortune-teller/README.md)
