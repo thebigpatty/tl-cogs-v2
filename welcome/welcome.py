@@ -8,6 +8,7 @@ import importlib
 import clashroyale
 import discord
 import json
+import datetime
 from redbot.core import commands, checks, Config
 from redbot.core.data_manager import bundled_data_path, cog_data_path
 
@@ -82,6 +83,11 @@ class Welcome(commands.Cog):
         async for message in channel.history(limit=10):
             if message.author.id == self.bot.user.id:
                 try:
+                    """ Skip messages older than 2 days, if you try to delete messages older than 2 weeks
+                        you can be rate limited for errors.
+                    """
+                    if not message.created_at > datetime.datetime.today() - datetime.timedelta(days=2):
+                        continue
                     await message.delete()
                 except discord.NotFound:
                     pass

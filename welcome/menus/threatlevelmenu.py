@@ -286,7 +286,7 @@ class ThreatLevelMenu():
     "end_human": {
         "embed": welcome.embed(title="Requesting assistance", color=discord.Color.orange(),
                        description="We have notified our officers about your information."
-                                   " Please wait in #global "
+                                   " Please wait in #welcome-gate "
                                    "channel while an officer comes and helps you.\n\n"
                                    " Please do not join any clans without talking to an officer.\n\n"
                                    "**Enjoy your stay!**"),
@@ -328,7 +328,7 @@ class ThreatLevelMenu():
         "embed": welcome.embed(title="Enjoy your stay", color=discord.Color.orange(),
                        description="We look forward to welcoming "
                                    "you into the Threat Level Family!\n\n"
-                                   "You can go talk to an officer in #global. "),
+                                   "You can go talk to an officer in #welcome-gate. "),
         "options": [
             {
                 "name": "Go to global",
