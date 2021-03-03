@@ -725,16 +725,6 @@ class ClashRoyaleClans(commands.Cog):
         guild = ctx.guild
         author = ctx.author
 
-        # if not (await self.bot.is_mod(ctx.author)):
-        #     return await ctx.send(
-        #         "Sorry! You do not have enough permissions to run this command."
-        #     )
-clas
-        # Check if user already has any of member roles:
-        # Use `!changeclan` to change already registered member's clan cause it needs role checking to remove existing roles
-        # if await self.discord_helper._is_member(member, guild=ctx.guild):
-        #     return await ctx.send("Error, " + member.mention + " is not a new member.")
-
         is_clan_member = False
         player_tags = self.tags.getAllTags(member.id)
         clans_joined = []
