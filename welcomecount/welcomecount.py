@@ -190,7 +190,7 @@ class WelcomeCount(commands.Cog):
                 "total": guild.member_count,
             }
             welcome: str = await channel_settings.welcome_msg()
-            msg: discord.Message = await channel.send(welcome.format(**params))
+            msg: discord.Message = await channel.send(welcome.format(**params),allowed_mentions = discord.AllowedMentions.all())
             await channel_settings.last_message.set(msg.id)
 
     # Events
