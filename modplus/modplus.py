@@ -4,6 +4,7 @@ import discord
 import asyncio
 import datetime
 import time
+from pyratelimit import PyRateLimit
 
 from .TestCog.testcog import TestCog
 
@@ -46,6 +47,12 @@ class ModPlus(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.config = Config.get_conf(self, 8818154, force_registration=True)
+        PyRateLimit.init(redis_host="localhost", redis_port=6379)
+        self.kicklimit = PyRateLimit()
+        self.kicklimit.create(3600, 5)
+        self.banlimit = PyRateLimit()
+        self.banlimit.create(3600, 3)
+
         default_global = {
             'notifs': {
                 'kick': [],
@@ -257,18 +264,13 @@ class ModPlus(commands.Cog):
     
 # TEST FUNCTION BEGIN
     @commands.command()
-    async def testnotify(self, ctx):
-        resp = await self.action_check(ctx, 'kick')
+    async def testnotify(self, ctx, permkey):
+        permkey = permkey.strip().lower()
+        if permkey not in self.permkeys:
+            return await ctx.send(ERROR_MESSAGES['PERM_UNRECOGNIZED'])
+        resp = await self.action_check(ctx, permkey)
         await ctx.send(resp)
-        
 
-    # @commands.command()
-    # async def testmodlog(self, ctx):
-    #     for _ in range(7):
-    #         await modlog.create_case(self.bot, ctx.guild, ctx.message.created_at, action_type="kick", user=ctx.author, moderator=ctx.author, reason='reasfasefa')
-    #     await ctx.send('done')
-
-# TEST FUNCTIONS END
 
     # Admin Logging
     @commands.Cog.listener(name='on_guild_role_update')
@@ -309,11 +311,11 @@ class ModPlus(commands.Cog):
                 try:
                     await user.remove_roles(role, reason='Rate limit exceeded.')
                     rm_mention.append(role.mention)
-                    rm_mention.append('(' + role.id + ')')
+                    rm_mention.append('(' + str(role.id) + ')')
                 except Exception:
                     issue = True
                     broken.append(role.mention)
-                    broken.append('(' + role.id + ')')
+                    broken.append('(' + str(role.id) + ')')
             
         if issue:
             await self.notify('ratelimit', "Removing roles in the ratelimit below ended in error. The user has a role above the bot. The following roles could not be removed: " + ', '.join(broken))
@@ -332,30 +334,16 @@ class ModPlus(commands.Cog):
                 break
         if not canrun:
             return False
-        now = time.time()
-        now -= 3600
-        count = 0
-        cases = await modlog.get_all_cases(ctx.guild, self.bot)  # action_type, created_at
         if permkey == 'kick':
-            for case in reversed(cases):
-                if case.created_at < now:
-                    break
-                if case.action_type == 'kick' and case.moderator.id == ctx.author.id:
-                    count += 1
-            if count > 5:
+            is_allowed = self.kicklimit.attempt(str(ctx.author.id))
+            if not is_allowed:
                 await self.rate_limit_exceeded(ctx.author, 'kick')
                 return False
         elif permkey == 'ban':
-            for case in reversed(cases):
-                if case.created_at < now:
-                    break
-                if (case.action_type == 'ban' or case.action_type == 'hackban') and case.moderator.id == ctx.author.id:
-                    count += 1
-            if count > 3:
+            is_allowed = self.banlimit.attempt(str(ctx.author.id))
+            if not is_allowed:
                 await self.rate_limit_exceeded(ctx.author, 'ban')
                 return False
-        elif permkey == 'delete':
-            pass
         return True
 
 
@@ -478,5 +466,3 @@ class ModPlus(commands.Cog):
     #         mutedrole : discord.Role = guild.create_role(name="Muted", reason="Muted Role Creation")
     #         for channel in guild.text_channels:
     #             channel.set_permissions(mutedrole, send_messages=False)
-
-        
