@@ -4,9 +4,14 @@ import discord
 import asyncio
 import datetime
 import time
-from pyratelimit import PyRateLimit
-
-from .TestCog.testcog import TestCog
+from pyrate_limiter import (
+	BucketFullException,
+	Duration,
+	RequestRate,
+	Limiter,
+	MemoryListBucket,
+	MemoryQueueBucket,
+)
 
 ERROR_MESSAGES = {
     'NOTIF_UNRECOGNIZED': "Notification Key was not recognized, please do `!notifs info` to get more info about the keys. List of valid keys: kick, ban, mute, jail, warn, channelperms, editchannel, deletemessages, ratelimit, adminrole, bot",
@@ -47,11 +52,15 @@ class ModPlus(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.config = Config.get_conf(self, 8818154, force_registration=True)
-        PyRateLimit.init(redis_host="localhost", redis_port=6379)
-        self.kicklimit = PyRateLimit()
-        self.kicklimit.create(3600, 5)
-        self.banlimit = PyRateLimit()
-        self.banlimit.create(3600, 3)
+        # PyRateLimit.init(redis_host="localhost", redis_port=6379)
+        hourly_rate5 = RequestRate(5, Duration.HOUR)
+        hourly_rate3 = RequestRate(3, Duration.HOUR)
+        self.kicklimiter = Limiter(hourly_rate5)
+        self.banlimiter = Limiter(hourly_rate3)
+        # self.kicklimit = PyRateLimit()
+        # self.kicklimit.create(3600, 5)
+        # self.banlimit = PyRateLimit()
+        # self.banlimit.create(3600, 3)
 
         default_global = {
             'notifs': {
@@ -261,15 +270,6 @@ class ModPlus(commands.Cog):
                 await txtchannel.send(payload, allowed_mentions=discord.AllowedMentions.all())
             except Exception:
                 pass
-    
-# TEST FUNCTION BEGIN
-    @commands.command()
-    async def testnotify(self, ctx, permkey):
-        permkey = permkey.strip().lower()
-        if permkey not in self.permkeys:
-            return await ctx.send(ERROR_MESSAGES['PERM_UNRECOGNIZED'])
-        resp = await self.action_check(ctx, permkey)
-        await ctx.send(resp)
 
 
     # Admin Logging
@@ -335,14 +335,16 @@ class ModPlus(commands.Cog):
         if not canrun:
             return False
         if permkey == 'kick':
-            is_allowed = self.kicklimit.attempt(str(ctx.author.id))
-            if not is_allowed:
+            try:
+                self.kicklimiter.try_acquire(str(ctx.author.id))
+            except BucketFullException:
                 await self.rate_limit_exceeded(ctx.author, 'kick')
                 return False
         elif permkey == 'ban':
-            is_allowed = self.banlimit.attempt(str(ctx.author.id))
-            if not is_allowed:
-                await self.rate_limit_exceeded(ctx.author, 'ban')
+            try:
+                self.banlimiter.try_acquire(str(ctx.author.id))
+            except BucketFullException:
+                await self.rate_limit_exceeded(ctx.author, 'kick')
                 return False
         return True
 
@@ -466,3 +468,5 @@ class ModPlus(commands.Cog):
     #         mutedrole : discord.Role = guild.create_role(name="Muted", reason="Muted Role Creation")
     #         for channel in guild.text_channels:
     #             channel.set_permissions(mutedrole, send_messages=False)
+
+        
