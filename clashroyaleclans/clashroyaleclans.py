@@ -17,8 +17,8 @@ from redbot.core.utils.chat_formatting import humanize_list, pagify
 from redbot.core.utils.menus import DEFAULT_CONTROLS, menu, start_adding_reactions
 from redbot.core.utils.predicates import MessagePredicate
 
-credits = "Bot by Legend Gaming"
-credits_icon = "https://cdn.discordapp.com/emojis/709796075581735012.gif?v=1"
+credits = "Bot by Threat Level Dev"
+credits_icon = "https://cdn.discordapp.com/attachments/718649031009501285/854960831102713886/TL-Logo-800x765.png"
 new_recruits_channel_id = 754879780889034933
 global_channel_id = 678115765219622922
 log = logging.getLogger("red.cogs.clashroyaleclans")
