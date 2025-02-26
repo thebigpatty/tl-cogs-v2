@@ -1,3 +1,5 @@
+# This is just a test
+
 import discord
 from redbot.core import commands, bank, checks, Config
 
