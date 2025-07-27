@@ -77,7 +77,7 @@ class Shopv2(commands.Cog):
         )
 
         for name, data in self.roles_for_sale.items():
-            role = ctx.guild.get_role(data["id"])
+            role = ctx.guild.get_role(data["role_id"])
             role_display = role.name if role else name.capitalize()
             cost = data["cost"]
             payday = data["payday"]
