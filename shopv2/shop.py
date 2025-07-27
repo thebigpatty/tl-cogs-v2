@@ -10,7 +10,7 @@ class Shopv2(commands.Cog):
 
     async def _buy_role(self, ctx, tier_name):
         tier_data = self.roles_for_sale[tier_name]
-        role = ctx.guild.get_role(tier_data["id"])
+        role = ctx.guild.get_role(tier_data["role_id"])
         cost = tier_data["cost"]
         prereq = tier_data["requires"]
 
@@ -27,7 +27,7 @@ class Shopv2(commands.Cog):
 
         # Check prerequisite
         if prereq:
-            prereq_role_id = self.roles_for_sale[prereq]["id"]
+            prereq_role_id = self.roles_for_sale[prereq]["role_id"]
             prereq_role = ctx.guild.get_role(prereq_role_id)
             prereq_display = prereq_role.name if prereq_role else prereq.capitalize()
             if prereq_role not in ctx.author.roles:
