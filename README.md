@@ -1,8 +1,11 @@
-# Threat Level AI cogs
-Cogs for Threat Level AI 
+# TLG AI v2 Cogs
+Cogs for TLG AI v2
+
+## Threat Level AI Cogs that started this rebuild
+- [Threat Level AI Cogs](https://github.com/dgarner-cg/tl-cogs)
 
 ## Threat Level Developers and Contributors
-- [Developers](docs/devs.md)
+- [Developers](docs/devsv2.md)
 
 ## Threat Level BOT Development Guide
 - [Write a Threat Level Cog](docs/writing_legend_cogs.md)
@@ -12,7 +15,6 @@ Cogs for Threat Level AI
 - [Lottery](lottery/README.md)
 - [Meme Grab](memegrab/README.md)
 - [Roat](roast/README.md)
-- [Shop](shop/README.md)
 - [Heist](https://github.com/Malarne/discord_cogs/tree/master/heist/README.md)
 
 
