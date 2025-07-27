@@ -3,7 +3,7 @@ import discord
 
 from .shop_roles import SHOP_ROLES  # <-- import the config
 
-class TieredRoleShop(commands.Cog):
+class Shopv2(commands.Cog):
     """Hardcoded Tier Role Shop with prerequisites."""
 
     def __init__(self, bot):
