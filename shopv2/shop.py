@@ -69,7 +69,7 @@ class Shopv2(commands.Cog):
         await self._buy_role(ctx, "arcane")
 
     @commands.command(name="shop")
-    async def roleshop(selfnum ctx):
+    async def roleshop(self, ctx):
         embed = discord.Embed(
             title="🏆 Role Shop",
             description="Earn credits and climb the ranks! Each tier has a payday bonus.",
