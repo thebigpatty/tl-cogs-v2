@@ -81,13 +81,12 @@ class Shopv2(commands.Cog):
             role_display = role.name if role else name.capitalize()
             cost = data["cost"]
             payday = data["payday"]
-            color_text = data["color"]
             prereq = data["requires"]
 
             prereq_text = f"Requires **{self.roles_for_sale[prereq]['color']}**" if prereq else "No prerequisite"
 
             embed.add_field(
-                name=f"{role_display} ({color_text})",
+                name=f"{role_display}",
                 value=(
                     f"💰 **Cost:** {cost:,} credits\n"
                     f"💵 **Payday bonus:** {payday:,} credits\n"
