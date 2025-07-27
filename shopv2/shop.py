@@ -83,7 +83,7 @@ class Shopv2(commands.Cog):
             payday = data["payday"]
             prereq = data["requires"]
 
-            prereq_text = f"Requires **{self.roles_for_sale[prereq]['color']}**" if prereq else "No prerequisite"
+            prereq_text = f"Requires **{self.roles_for_sale[prereq]}**" if prereq else "No prerequisite"
 
             embed.add_field(
                 name=f"{role_display}",
