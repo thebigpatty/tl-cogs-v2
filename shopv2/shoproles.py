@@ -1,4 +1,4 @@
-SHOP_ROLES = [
+SHOP_ROLES = {
     {
         "name": "Bronze",
         "role_id": 832708253430317056,
@@ -38,4 +38,4 @@ SHOP_ROLES = [
         "requires": 832710600719204392,
         "command": "!buyarcane"
     }
-]
+}
