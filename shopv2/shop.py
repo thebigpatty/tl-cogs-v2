@@ -1,14 +1,14 @@
 from redbot.core import commands, bank
 import discord
 
-from .shop_roles import SHOP_ROLES  # <-- import the config
+from .shoproles import SHOP_ROLES 
 
 class Shopv2(commands.Cog):
     """Hardcoded Tier Role Shop with prerequisites."""
 
     def __init__(self, bot):
         self.bot = bot
-        self.roles_for_sale = SHOP_ROLES  # now uses external file
+        self.roles_for_sale = SHOP_ROLES 
 
     async def _buy_role(self, ctx, tier_name):
         tier_data = self.roles_for_sale[tier_name]
